@@ -1,25 +1,6 @@
 version: "3.8"
 
 services:
-  db:
-    image: postgres:12
-    container_name: dtb_postgres
-    restart: always
-    volumes:
-      - postgres_gitlab:/var/lib/postgresql/data/
-      #- ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      #- POSTGRES_DB=reportsdb
-    env_file:
-      - ./.env
-    ports:
-      - "5455:5432"
-    logging:
-      options:
-        max-size: 10m
-        max-file: "3"
   redis:
     image: redis:alpine
     container_name: dtb_redis
@@ -33,11 +14,9 @@ services:
     volumes:
       - .:/code
     ports:
-      - "8001:8000"
+      - "8000:8000"
     env_file:
       - ./.env
-    depends_on:
-      - db
   bot:
     build:
       context: .
@@ -78,6 +57,3 @@ services:
       - redis
       - celery
       - web
-
-volumes:
-  postgres_gitlab:
